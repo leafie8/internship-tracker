@@ -1,89 +1,78 @@
-import React, { useState } from "react";
-import { Grid, Typography, Link } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
-import { Link as RouterLink } from "react-router-dom";
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
+import { Grid, Link, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import React, { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 const JobDescription = (props) => {
-  const [isExpanded, setIsReadMore] = useState(false);
-  const toggle = () => {
-    setIsReadMore(!isExpanded);
-  };
+  const [readMore, setReadMore] = useState(false);
+  function toggle() {
+    setReadMore((a) => !a);
+  }
   const centered = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "5vh",
+    display: 'flex',
+    justifyContent: 'center',
+    height: '1vh',
   };
-  const ReadMore = ({ children }) => {
-    return (
-      <Grid container direction="column" spacing={1}>
-        <Grid item marginBottom={2}>
-          <Typography>{children.description}</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h5">Requirements</Typography>
-        </Grid>
-        <Grid item marginBottom={2}>
-          <Typography style={{ whiteSpace: "pre-line" }}>
-            {children.requirements}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h5">Responsibilities</Typography>
-        </Grid>
-        <Grid item style={{ whiteSpace: "pre-line" }}>
-          <Typography>{children.responsibilities}</Typography>
-        </Grid>
-      </Grid>
-    );
-  };
-  return (
-    <Grid container direction="column" spacing={1}>
+  const FullDescription = () => (
+    <Grid container direction="column" spacing={5}>
       <Grid item>
-        <Typography variant="h5">Job description</Typography>
+        <Typography>{props.description}</Typography>
       </Grid>
       <Grid item>
-        <Typography>
-          {isExpanded ? (
-            <ReadMore>{props}</ReadMore>
-          ) : (
-            props.description.slice(0, 410)
-          )}
+        <Typography variant="h5" marginBottom={3}>
+          Requirements
+        </Typography>
+        <Typography style={{ whiteSpace: 'pre-line' }}>
+          {props.requirements}
         </Typography>
       </Grid>
       <Grid item>
-        {!isExpanded && (
-          <Link component="button" size="large" onClick={toggle}>
-            <Typography variant="MuiLink" fontWeight={"bold"}>
+        <Typography variant="h5" marginBottom={3}>
+          Responsibilities
+        </Typography>
+        <Typography style={{ whiteSpace: 'pre-line' }}>
+          {props.responsibilities}
+        </Typography>
+      </Grid>
+      <Grid item sx={centered}>
+        <IconButton onClick={toggle}>
+          <KeyboardArrowUpOutlinedIcon />
+        </IconButton>
+      </Grid>
+      <Grid item sx={centered}>
+        <Link
+          component={RouterLink}
+          to={props.externalLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Typography size="small" fontWeight={'bold'}>
+            Continue to external listing to read full description
+          </Typography>
+        </Link>
+      </Grid>
+    </Grid>
+  );
+  return (
+    <Grid container direction="row" spacing={5}>
+      <Grid item>
+        <Typography variant="h5" marginBottom={3}>
+          Job description
+        </Typography>
+        {readMore ? (
+          <FullDescription />
+        ) : (
+          <Typography noWrap width={1100}>
+            {props.description}
+          </Typography>
+        )}
+        {readMore ? null : (
+          <Link component="button" onClick={toggle}>
+            <Typography fontWeight={'bold'} size="small" marginTop={3}>
               Read More
             </Typography>
           </Link>
-        )}
-      </Grid>
-      <Grid item>
-        {isExpanded && (
-          <div style={centered}>
-            <IconButton onClick={toggle} variant={"MuiButton"}>
-              <KeyboardArrowUpOutlinedIcon />
-            </IconButton>
-          </div>
-        )}
-      </Grid>
-      <Grid item>
-        {isExpanded && (
-          <div style={centered}>
-            <Link
-              component={RouterLink}
-              to={props.externalLink}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Typography variant="MuiLink" fontWeight={"bold"}>
-                Continue to external listing to read full description
-              </Typography>
-            </Link>
-          </div>
         )}
       </Grid>
     </Grid>
